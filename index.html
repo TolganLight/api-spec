@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>API Documentation</title>
+    <meta charset="utf-8"/>
+    <style>
+      body { margin: 0; font-family: Arial, sans-serif; }
+      #topbar { padding: 1em; background: #f6f6f6; border-bottom: 1px solid #ddd;}
+      label { font-weight:bold; }
+    </style>
+  </head>
+  <body>
+    <div id="topbar">
+      <label for="specSelect">Choose API:</label>
+      <select id="specSelect">
+        <option value="address-geo-social-api.yaml">Address GeoSocial API</option>
+        <!-- Add more as needed -->
+      </select>
+    </div>
+    <div id="redoc-container"></div>
+    <script src="https://cdn.jsdelivr.net/npm/redoc@next/bundles/redoc.standalone.min.js"></script>
+    <script>
+      function loadRedoc(specUrl) {
+        Redoc.init(specUrl, {}, document.getElementById('redoc-container'));
+      }
+      const select = document.getElementById('specSelect');
+      // Load default on page load
+      loadRedoc(select.value);
+      // Listen for changes
+      select.addEventListener('change', () => loadRedoc(select.value));
+    </script>
+  </body>
+</html>
