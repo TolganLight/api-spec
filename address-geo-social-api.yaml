@@ -14,6 +14,15 @@ paths:
       summary: Retrieve address data by key, GNAF property ID, legal parcel ID, or street locality
       description: |
         Returns address-level data for provided identifiers, with options to filter by mesh block category.
+
+        **Note: Exactly one of the following parameters must be provided in each request:**
+
+        - `address_keys`
+        - `gnaf_property_ids`
+        - `legal_parcel_ids`
+        - `street_loc_pid`
+
+        If more than one of these is supplied, the API will return an error.
       parameters:
         - in: query
           name: address_keys
@@ -21,7 +30,10 @@ paths:
             type: array
             items:
               type: string
-          description: Up to 50 address key values
+          description: |
+            Up to 50 address key values.
+
+            **Only one of `address_keys`, `gnaf_property_ids`, `legal_parcel_ids`, or `street_loc_pid` can be provided in a single request. Do not combine with the others.**
           required: false
           explode: false
           example: [100102HICKOXSTREETTRARALGONVIC3844,100106GREYSTREETTRARALGONVIC3844]
@@ -31,7 +43,10 @@ paths:
             type: array
             items:
               type: string
-          description: Up to 50 GNAF property PID values
+          description: |
+            Up to 50 GNAF property PID values.
+
+            **Only one of `address_keys`, `gnaf_property_ids`, `legal_parcel_ids`, or `street_loc_pid` can be provided in a single request. Do not combine with the others.**
           required: false
           explode: false
           example: [52534163,126175033]
@@ -41,7 +56,10 @@ paths:
             type: array
             items:
               type: string
-          description: Up to 50 legal parcel ID values
+          description: |
+            Up to 50 legal parcel ID values.
+
+            **Only one of `address_keys`, `gnaf_property_ids`, `legal_parcel_ids`, or `street_loc_pid` can be provided in a single request. Do not combine with the others.**
           required: false
           explode: false
           example: [ "3\\PS408857", "2\\TP574754" ]
@@ -49,7 +67,10 @@ paths:
           name: street_loc_pid
           schema:
             type: string
-          description: Query all addresses by Street Locality PID (e.g. a street)
+          description: |
+            Query all addresses by Street Locality PID (e.g. a street).
+
+            **Only one of `address_keys`, `gnaf_property_ids`, `legal_parcel_ids`, or `street_loc_pid` can be provided in a single request. Do not combine with the others.**
           required: false
           example: VIC2572
         - in: query
