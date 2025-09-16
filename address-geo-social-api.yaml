@@ -1,0 +1,165 @@
+openapi: 3.0.3
+info:
+  title: Address Insights API
+  version: 1.0.0
+  description: |
+    Query address-level indicators such as bushfire/flood flags, SEIFA, public housing, and more using up to 50 address keys, GNAF IDs, or legal parcel IDs, or an entire street locality.
+
+servers:
+  - url: https://api.htag.ai/v1
+
+paths:
+  /address-insights:
+    get:
+      summary: Retrieve address data by key, GNAF property ID, legal parcel ID, or street locality
+      description: |
+        Returns address-level data for provided identifiers, with options to filter by mesh block category.
+      parameters:
+        - in: query
+          name: address_keys
+          schema:
+            type: array
+            items:
+              type: string
+          description: Up to 50 address key values
+          required: false
+          explode: false
+          example: [100102HICKOXSTREETTRARALGONVIC3844,100106GREYSTREETTRARALGONVIC3844]
+        - in: query
+          name: gnaf_property_ids
+          schema:
+            type: array
+            items:
+              type: string
+          description: Up to 50 GNAF property PID values
+          required: false
+          explode: false
+          example: [52534163,126175033]
+        - in: query
+          name: legal_parcel_ids
+          schema:
+            type: array
+            items:
+              type: string
+          description: Up to 50 legal parcel ID values
+          required: false
+          explode: false
+          example: [ "3\\PS408857", "2\\TP574754" ]
+        - in: query
+          name: street_loc_pid
+          schema:
+            type: string
+          description: Query all addresses by Street Locality PID (e.g. a street)
+          required: false
+          example: VIC2572
+        - in: query
+          name: mb_category_2021
+          schema:
+            type: string
+            enum:
+              - Residential
+              - Commercial
+              - Parkland
+              - Other
+              - Primary Production
+              - Education
+              - Water
+              - Industrial
+              - Transport
+              - Hospital/Medical
+              - SHIPPING
+              - MIGRATORY
+              - OFFSHORE
+              - NOUSUALRESIDENCE
+              - ANTARCTICA
+              - Outside Australia
+          description: Mesh Block category (defaults to Residential)
+          required: false
+          example: Residential
+      responses:
+        '200':
+          description: List of address-level records matching the query
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/AddressRecord'
+                  total:
+                    type: integer
+                    description: Number of records returned
+        '400':
+          description: Invalid input or parameter constraints violated
+
+components:
+  schemas:
+    AddressRecord:
+      type: object
+      properties:
+        address_key:
+          type: string
+          example: 100102HICKOXSTREETTRARALGONVIC3844
+        gnaf_property_pid:
+          type: string
+          nullable: true
+          example: 52534163
+        legal_parcel_id:
+          type: string
+          nullable: true
+          example: 3\PS408857
+        mb_category:
+          type: string
+          example: Residential
+        street_loc_pid:
+          type: string
+          example: VIC2572
+        lat:
+          type: number
+          format: double
+          example: -38.20867268
+        lon:
+          type: number
+          format: double
+          example: 146.53163935
+         flood:
+          type: boolean
+          nullable: true
+          description: Flood flagged for this property (true=Yes, false=No, null=unknown)
+          example: false
+        bushfire:
+          type: boolean
+          nullable: true
+          description: Bushfire flagged for this property (true=Yes, false=No, null=unknown)
+          example: true
+        heritage:
+          type: boolean
+          nullable: true
+          description: Heritage flagged for this property (true=Yes, false=No, null=unknown)
+          example: null
+        zoning:
+          type: string
+          nullable: true
+          example: null
+        IRSD:
+          type: integer
+          nullable: true
+          example: 4
+        IRSAD:
+          type: integer
+          nullable: true
+          example: 4
+        IER:
+          type: integer
+          nullable: true
+          example: 4
+        IEO:
+          type: integer
+          nullable: true
+          example: 3
+        public_housing:
+          type: number
+          format: float
+          example: 0.4500
