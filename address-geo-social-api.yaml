@@ -124,7 +124,7 @@ components:
           type: number
           format: double
           example: 146.53163935
-         flood:
+        flood:
           type: boolean
           nullable: true
           description: Flood flagged for this property (true=Yes, false=No, null=unknown)
