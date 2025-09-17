@@ -3,7 +3,7 @@ info:
   title: Address Insights API
   version: 1.0.0
   description: |
-    Query address-level indicators such as bushfire/flood flags, SEIFA, public housing, and more using up to 50 address keys, GNAF IDs, or legal parcel IDs, or an entire street locality.
+    Query address-level indicators such as bushfire/flood flags, SEIFA, public housing, and more using up to 50 address keys,  or legal parcel IDs, or an entire street locality.
 
 servers:
   - url: https://api.htag.ai/v1
@@ -11,7 +11,7 @@ servers:
 paths:
   /address-insights:
     get:
-      summary: Retrieve address data by key, GNAF property ID, legal parcel ID, or street locality
+      summary: Retrieve address data by key, legal parcel ID, or street locality
       description: |
         Returns address-level data for provided identifiers, with options to filter by mesh block category.
 
@@ -32,7 +32,7 @@ paths:
           description: |
             Up to 50 address key values.
 
-            **Only one of `address_keys`, `gnaf_property_ids`, `legal_parcel_ids`, or `street_loc_pid` can be provided in a single request. Do not combine with the others.**
+            **Only one of `address_keys`, `legal_parcel_ids`, or `street_loc_pid` can be provided in a single request. Do not combine with the others.**
           required: false
           explode: false
           example: [100102HICKOXSTREETTRARALGONVIC3844,100106GREYSTREETTRARALGONVIC3844]
@@ -45,7 +45,7 @@ paths:
           description: |
             Up to 50 legal parcel ID values.
 
-            **Only one of `address_keys`, `gnaf_property_ids`, `legal_parcel_ids`, or `street_loc_pid` can be provided in a single request. Do not combine with the others.**
+            **Only one of `address_keys`, `legal_parcel_ids`, or `street_loc_pid` can be provided in a single request. Do not combine with the others.**
           required: false
           explode: false
           example: [ "3\\PS408857", "2\\TP574754" ]
@@ -56,7 +56,7 @@ paths:
           description: |
             Query all addresses by Street Locality PID (e.g. a street).
 
-            **Only one of `address_keys`, `gnaf_property_ids`, `legal_parcel_ids`, or `street_loc_pid` can be provided in a single request. Do not combine with the others.**
+            **Only one of `address_keys`, `legal_parcel_ids`, or `street_loc_pid` can be provided in a single request. Do not combine with the others.**
           required: false
           example: VIC2572
         - in: query
@@ -80,7 +80,7 @@ paths:
               - NOUSUALRESIDENCE
               - ANTARCTICA
               - Outside Australia
-          description: Mesh Block category (defaults to Residential)
+          description: Mesh Block category (defaults to Any)
           required: false
           example: Residential
       responses:
