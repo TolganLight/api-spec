@@ -18,7 +18,7 @@ paths:
         **Note: Exactly one of the following parameters must be provided in each request:**
 
         - `address_keys`
-        - `legal_parcel_ids`
+        - `legal_parcel_id`
         - `street_loc_pid`
 
         If more than one of these is supplied, the API will return an error.
@@ -32,7 +32,7 @@ paths:
           description: |
             Up to 50 address key values.
 
-            **Only one of `address_keys`, `legal_parcel_ids`, or `street_loc_pid` can be provided in a single request. Do not combine with the others.**
+            **Only one of `address_keys`, `legal_parcel_id`, or `street_loc_pid` can be provided in a single request. Do not combine with the others.**
           required: false
           explode: false
           example: [100102HICKOXSTREETTRARALGONVIC3844,100106GREYSTREETTRARALGONVIC3844]
@@ -45,10 +45,10 @@ paths:
           description: |
             Up to 50 legal parcel ID values.
 
-            **Only one of `address_keys`, `legal_parcel_ids`, or `street_loc_pid` can be provided in a single request. Do not combine with the others.**
+            **Only one of `address_keys`, `legal_parcel_id`, or `street_loc_pid` can be provided in a single request. Do not combine with the others.**
           required: false
           explode: false
-          example: [ "3\\PS408857", "2\\TP574754" ]
+          example: "2\\TP574754"
         - in: query
           name: street_loc_pid
           schema:
@@ -56,33 +56,35 @@ paths:
           description: |
             Query all addresses by Street Locality PID (e.g. a street).
 
-            **Only one of `address_keys`, `legal_parcel_ids`, or `street_loc_pid` can be provided in a single request. Do not combine with the others.**
+            **Only one of `address_keys`, `legal_parcel_id`, or `street_loc_pid` can be provided in a single request. Do not combine with the others.**
           required: false
           example: VIC2572
         - in: query
           name: mb_category_2021
           schema:
-            type: string
-            enum:
-              - Residential
-              - Commercial
-              - Parkland
-              - Other
-              - Primary Production
-              - Education
-              - Water
-              - Industrial
-              - Transport
-              - Hospital/Medical
-              - SHIPPING
-              - MIGRATORY
-              - OFFSHORE
-              - NOUSUALRESIDENCE
-              - ANTARCTICA
-              - Outside Australia
+            type: array
+            items:
+              type: string
+              enum:
+                - Residential
+                - Commercial
+                - Parkland
+                - Other
+                - Primary Production
+                - Education
+                - Water
+                - Industrial
+                - Transport
+                - Hospital/Medical
+                - SHIPPING
+                - MIGRATORY
+                - OFFSHORE
+                - NOUSUALRESIDENCE
+                - ANTARCTICA
+                - Outside Australia
           description: Mesh Block category (defaults to Any)
           required: false
-          example: Residential
+          example: [Residential, Commercial]
       responses:
         '200':
           description: List of address-level records matching the query
