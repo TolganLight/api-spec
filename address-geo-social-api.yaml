@@ -18,7 +18,6 @@ paths:
         **Note: Exactly one of the following parameters must be provided in each request:**
 
         - `address_keys`
-        - `gnaf_property_ids`
         - `legal_parcel_ids`
         - `street_loc_pid`
 
@@ -37,19 +36,6 @@ paths:
           required: false
           explode: false
           example: [100102HICKOXSTREETTRARALGONVIC3844,100106GREYSTREETTRARALGONVIC3844]
-        - in: query
-          name: gnaf_property_ids
-          schema:
-            type: array
-            items:
-              type: string
-          description: |
-            Up to 50 GNAF property PID values.
-
-            **Only one of `address_keys`, `gnaf_property_ids`, `legal_parcel_ids`, or `street_loc_pid` can be provided in a single request. Do not combine with the others.**
-          required: false
-          explode: false
-          example: [52534163,126175033]
         - in: query
           name: legal_parcel_ids
           schema:
