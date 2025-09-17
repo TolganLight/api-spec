@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Address Insights API
-  version: 1.0.0
+  version: 1.0.1
   description: |
     Query address-level indicators such as bushfire/flood flags, SEIFA, public housing, and more using up to 50 address keys,  or legal parcel IDs, or an entire street locality.
 
