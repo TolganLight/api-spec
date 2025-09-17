@@ -37,7 +37,7 @@ paths:
           explode: false
           example: [100102HICKOXSTREETTRARALGONVIC3844,100106GREYSTREETTRARALGONVIC3844]
         - in: query
-          name: legal_parcel_ids
+          name: legal_parcel_id
           schema:
             type: array
             items:
