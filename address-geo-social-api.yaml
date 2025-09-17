@@ -9,7 +9,7 @@ servers:
   - url: https://api.htag.ai/v1
 
 paths:
-  /address-insights:
+  /address-geo-social:
     get:
       summary: Retrieve address data by key, legal parcel ID, or street locality
       description: |
