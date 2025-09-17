@@ -39,11 +39,9 @@ paths:
         - in: query
           name: legal_parcel_id
           schema:
-            type: array
-            items:
-              type: string
+            type: string
           description: |
-            Up to 50 legal parcel ID values.
+            One legal parcel ID value.
 
             **Only one of `address_keys`, `legal_parcel_id`, or `street_loc_pid` can be provided in a single request. Do not combine with the others.**
           required: false
