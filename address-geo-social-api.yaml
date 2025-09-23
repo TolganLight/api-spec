@@ -1,108 +1,157 @@
 openapi: 3.0.3
 info:
-  title: Address Intelligence API
+  title: HtAG Intelligence APIs
   version: 1.0.2
   description: |
-    Query address-level indicators such as bushfire/flood flags, SEIFA, public housing, and more using up to 50 address keys, or legal parcel ID, or an entire street locality.
-
+    Domain-partitioned APIs for HtAG Intelligence. Initial domain: **Address**.
 servers:
-  - url: https://api.prod.htagai.com/v1
+  - url: https://api.htagai.com/v1
+
+tags:
+  - name: Address
+    description: "Address Intelligence domain: query address-level indicators (e.g., bushfire/flood flags, SEIFA, public housing)."
+  - name: Marketing
+    description: "Marketing Intelligence domain (reserved for future endpoints)."
+
+x-tagGroups:
+  - name: API Products
+    tags:
+      - Address
+      - Marketing
 
 paths:
   /address/insights:
     get:
+      tags: [Address]
+      operationId: getAddressInsights
       summary: Retrieve address data by key(s), legal parcel ID, or street locality
       description: |
         Returns address-level data for provided identifiers, with options to filter by mesh block category.
 
-        **Note: Exactly one of the following parameters must be provided in each request:**
-
+        **Exactly one** of the following query parameters must be supplied per request:
         - `address_keys`
         - `legal_parcel_id`
         - `street_loc_pid`
-
-        If more than one of these is supplied, the API will return an error.
+      x-htg-exactlyOne:
+        - address_keys
+        - legal_parcel_id
+        - street_loc_pid
       parameters:
-        - in: query
-          name: address_keys
-          schema:
-            type: array
-            items:
-              type: string
-          description: |
-            Up to 50 address key values.
-
-            **Only one of `address_keys`, `legal_parcel_id`, or `street_loc_pid` can be provided in a single request. Do not combine with the others.**
-          required: false
-          explode: false
-          example: [100102HICKOXSTREETTRARALGONVIC3844,100106GREYSTREETTRARALGONVIC3844]
-        - in: query
-          name: legal_parcel_id
-          schema:
-            type: string
-          description: |
-            One legal parcel ID value.
-
-            **Only one of `address_keys`, `legal_parcel_id`, or `street_loc_pid` can be provided in a single request. Do not combine with the others.**
-          required: false
-          explode: false
-          example: "2\\TP574754"
-        - in: query
-          name: street_loc_pid
-          schema:
-            type: string
-          description: |
-            Query all addresses by Street Locality PID (e.g. a street).
-
-            **Only one of `address_keys`, `legal_parcel_id`, or `street_loc_pid` can be provided in a single request. Do not combine with the others.**
-          required: false
-          example: VIC2572
-        - in: query
-          name: mb_category_2021
-          schema:
-            type: array
-            items:
-              type: string
-              enum:
-                - Residential
-                - Commercial
-                - Parkland
-                - Other
-                - Primary Production
-                - Education
-                - Water
-                - Industrial
-                - Transport
-                - Hospital/Medical
-                - SHIPPING
-                - MIGRATORY
-                - OFFSHORE
-                - NOUSUALRESIDENCE
-                - ANTARCTICA
-                - Outside Australia
-          description: Mesh Block category (defaults to Any)
-          required: false
-          example: [Residential, Commercial]
+        - $ref: '#/components/parameters/AddressKeys'
+        - $ref: '#/components/parameters/LegalParcelId'
+        - $ref: '#/components/parameters/StreetLocPid'
+        - $ref: '#/components/parameters/MbCategory2021'
       responses:
         '200':
           description: List of address-level records matching the query
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  data:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/AddressRecord'
-                  total:
-                    type: integer
-                    description: Number of records returned
+                $ref: '#/components/schemas/AddressInsightsResponse'
         '400':
-          description: Invalid input or parameter constraints violated
+          $ref: '#/components/responses/BadRequest'
 
 components:
+  parameters:
+    AddressKeys:
+      in: query
+      name: address_keys
+      description: |
+        Up to 50 address key values.
+
+        **Only one of `address_keys`, `legal_parcel_id`, or `street_loc_pid` can be provided in a single request.**
+      required: false
+      schema:
+        type: array
+        items:
+          type: string
+        maxItems: 50
+      style: form
+      explode: false
+      example:
+        - 100102HICKOXSTREETTRARALGONVIC3844
+        - 100106GREYSTREETTRARALGONVIC3844
+
+    LegalParcelId:
+      in: query
+      name: legal_parcel_id
+      description: |
+        One legal parcel ID value.
+
+        **Only one of `address_keys`, `legal_parcel_id`, or `street_loc_pid` can be provided in a single request.**
+      required: false
+      schema:
+        type: string
+      example: "2\\TP574754"
+
+    StreetLocPid:
+      in: query
+      name: street_loc_pid
+      description: |
+        Query all addresses by Street Locality PID (e.g., a street).
+
+        **Only one of `address_keys`, `legal_parcel_id`, or `street_loc_pid` can be provided in a single request.**
+      required: false
+      schema:
+        type: string
+      example: VIC2572
+
+    MbCategory2021:
+      in: query
+      name: mb_category_2021
+      description: Mesh Block category (defaults to Any)
+      required: false
+      schema:
+        type: array
+        items:
+          type: string
+          enum:
+            - Residential
+            - Commercial
+            - Parkland
+            - Other
+            - Primary Production
+            - Education
+            - Water
+            - Industrial
+            - Transport
+            - Hospital/Medical
+            - SHIPPING
+            - MIGRATORY
+            - OFFSHORE
+            - NOUSUALRESIDENCE
+            - ANTARCTICA
+            - Outside Australia
+      style: form
+      explode: false
+      example: [Residential, Commercial]
+
+  responses:
+    BadRequest:
+      description: Invalid input or parameter constraints violated
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+              details:
+                type: object
+                additionalProperties: true
+
   schemas:
+    AddressInsightsResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AddressRecord'
+        total:
+          type: integer
+          description: Number of records returned
+
     AddressRecord:
       type: object
       properties:
@@ -116,7 +165,7 @@ components:
         legal_parcel_id:
           type: string
           nullable: true
-          example: 3\PS408857
+          example: 3\\PS408857
         mb_category:
           type: string
           example: Residential
@@ -169,4 +218,4 @@ components:
         public_housing:
           type: number
           format: float
-          example: 0.4500
+          example: 0.45
